@@ -79,7 +79,7 @@
 
   <body>
     <div id="Timer">
-      <audio src="" autoplay type="audio/mp3" id="myAudio">
+      <audio src="" autoplay loop type="audio/mp3" id="myAudio">
         No stress-inducing sounds for you :(
       </audio>
       <button id="playPauseBtn" onclick="togglePlay()">
@@ -92,6 +92,9 @@
   <script>
     const audio = document.getElementById("myAudio");
     const playPauseBtn = document.getElementById("playPauseBtn");
+    var days = Math.floor(
+      (playPauseBtn - new Date().getTime()) / (1000 * 60 * 60 * 24),
+    );
 
     function togglePlay() {
       if (audio.paused) {
@@ -103,17 +106,19 @@
       }
     }
 
-    function update_audio() {
-      // randomize from track pool
-      const source =
-        audiolist[days][Math.floor(Math.random() * audiolist[days].length)];
-      audio.src = source;
-      console.log(source);
+    // randomize track pool
+    var audiolist_filtered = audiolist.map(
+      (list) => list[Math.floor(Math.random() * list.length)],
+    );
+    console.log(audiolist_filtered);
+    function update_audio(day) {
+      if (!audio.src.includes(audiolist_filtered[day])) {
+        audio.src = audiolist_filtered[day];
+      }
     }
 
     // Set the date we're counting down to
     var countDownDate = new Date("Jan 2, 2024 09:00:00").getTime();
-    var days = Math.floor((countDownDate - new Date().getTime()) / (1000 * 60 * 60 * 24));
 
     // Update the count down every 1 second
     var x = setInterval(function () {
@@ -145,14 +150,14 @@
 
       // If the count down is finished, write some text
       if (distance < 0) {
-        audio.src = "audioaftermath.mp3";
-        audio.setAttribute("loop", "");
         clearInterval(x);
         document.getElementById("demo").innerHTML =
           "EXAMS ARE HERE<br><span>GOOD LUCK :)</span>";
-        return;
+        <!-- return; -->
       }
       // switch audio file in intervals
+      update_audio(days > 8 ? 9 : days);
+
       if (days == 0) {
         document.getElementById("demo").innerHTML =
           "<span>DAWN OF THE FINAL DAY <br></span>" +
@@ -164,15 +169,5 @@
           "s ";
       }
     }, 1000);
-
-    // update track after each play
-    audio.addEventListener("ended", function () {
-      // audio.currentTime = 0;
-      console.log("it end");
-      if (days >= 0) {
-        update_audio();
-      }
-    });
-    update_audio();
   </script>
 </html>
