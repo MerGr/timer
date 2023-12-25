@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 json='audiolist = ['
 for day in $(seq 0 9); do
 	line=''
