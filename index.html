@@ -153,7 +153,10 @@
         <!-- return; -->
       }
       // switch audio file in intervals
-      update_audio(days > 8 ? 9 : days);
+      if (days < 0 && audio.src != "audioaftermath.mp3") {
+        audio.src = "audioaftermath.mp3";
+      }
+      else if (days >= 0) { update_audio(days > 8 ? 9 : days); }
 
       if (days == 0) {
         document.getElementById("demo").innerHTML =
